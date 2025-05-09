@@ -1,6 +1,5 @@
 package com.example.BootCampProject.service.dtos.requests.Employee;
 
-import java.sql.Date;
 
 public class UpdateEmployeeRequest {
     private int id;

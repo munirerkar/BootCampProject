@@ -2,6 +2,8 @@ package com.example.BootCampProject.entity;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "applicants")
 public class Applicant {
@@ -14,14 +16,20 @@ public class Applicant {
     @ManyToOne()
     @JoinColumn(name = "userId")
     private User user;
+    @OneToMany(mappedBy = "applicant")
+    private List<Application> applications;
+    @OneToMany(mappedBy = "applicant")
+    private List<Blacklist> blacklists;
 
     public Applicant() {
     }
 
-    public Applicant(int id, String about, User user) {
+    public Applicant(int id, String about, User user, List<Application> applications, List<Blacklist> blacklists) {
         this.id = id;
         this.about = about;
         this.user = user;
+        this.applications = applications;
+        this.blacklists = blacklists;
     }
 
     public int getId() {
@@ -47,4 +55,21 @@ public class Applicant {
     public void setUser(User user) {
         this.user = user;
     }
+
+    public List<Application> getApplications() {
+        return applications;
+    }
+
+    public void setApplications(List<Application> applications) {
+        this.applications = applications;
+    }
+
+    public List<Blacklist> getBlacklists() {
+        return blacklists;
+    }
+
+    public void setBlacklists(List<Blacklist> blacklists) {
+        this.blacklists = blacklists;
+    }
+
 }

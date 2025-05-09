@@ -2,6 +2,8 @@ package com.example.BootCampProject.entity;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "instructors")
 public class Instructor {
@@ -14,6 +16,8 @@ public class Instructor {
     @ManyToOne()
     @JoinColumn(name = "userId")
     private User user;
+    @OneToMany(mappedBy = "instructor")
+    private List<Bootcamp> bootcamps;
 
     public Instructor() {
     }
