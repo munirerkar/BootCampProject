@@ -1,12 +1,15 @@
 package com.example.BootCampProject.entity;
 
+import com.example.BootCampProject.common.entity.BaseEntity;
 import jakarta.persistence.*;
+import org.hibernate.annotations.SQLRestriction;
 
 import java.util.List;
 
 @Entity
 @Table(name = "applicants")
-public class Applicant {
+@SQLRestriction(value = "deleted_at IS NULL")
+public class Applicant  extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")

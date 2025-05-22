@@ -6,14 +6,12 @@ import com.example.BootCampProject.repository.BootcampRepository;
 import com.example.BootCampProject.service.abstracts.BootcampService;
 import com.example.BootCampProject.service.dtos.requests.Bootcamp.CreateBootcampRequest;
 import com.example.BootCampProject.service.dtos.requests.Bootcamp.UpdateBootcampRequest;
-import com.example.BootCampProject.service.dtos.responses.Bootcamp.CreatedBootcampResponse;
-import com.example.BootCampProject.service.dtos.responses.Bootcamp.GetBootcampResponse;
-import com.example.BootCampProject.service.dtos.responses.Bootcamp.GetListBootcampResponse;
-import com.example.BootCampProject.service.dtos.responses.Bootcamp.UpdateBootcampResponse;
+import com.example.BootCampProject.service.dtos.responses.Bootcamp.*;
 import com.example.BootCampProject.service.dtos.responses.Employee.GetListEmployeeResponse;
 import com.example.BootCampProject.service.mappers.BootcampMapper;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -66,6 +64,22 @@ public class BootcampServiceImp implements BootcampService {
         List<Bootcamp> bootcamps = bootcampRepository.findByBootcampState(bootcampState);
         List<GetListBootcampResponse> responses = bootcamps.stream().map(BootcampMapper.INSTANCE::getListBootcampResponsesFromBootcamps).collect(Collectors.toList());
         return responses;
+    }
+
+    @Override
+    public List<GetListBootcampResponse> getByName(String name) {
+        List<Bootcamp> bootcamps = bootcampRepository.getByName(name);
+        List<GetListBootcampResponse> responses = bootcamps.stream().map(BootcampMapper.INSTANCE::getListBootcampResponsesFromBootcamps).collect(Collectors.toList());
+        return responses;
+    }
+
+    @Override
+    public DeletedBootcampResponse softDelete(int id) {
+        Bootcamp bootcamp = bootcampRepository.findById(id).orElseThrow(()->new RuntimeException("Bootcamp not found"));
+        bootcamp.setDeletedAt(LocalDateTime.now());
+        Bootcamp deletedBootcamp = bootcampRepository.save(bootcamp);
+        DeletedBootcampResponse response = BootcampMapper.INSTANCE.deletedBrandResponseFromBrand(deletedBootcamp);
+        return response;
     }
 
 }

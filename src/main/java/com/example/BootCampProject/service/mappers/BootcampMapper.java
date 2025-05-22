@@ -3,10 +3,7 @@ package com.example.BootCampProject.service.mappers;
 import com.example.BootCampProject.entity.Bootcamp;
 import com.example.BootCampProject.service.dtos.requests.Bootcamp.CreateBootcampRequest;
 import com.example.BootCampProject.service.dtos.requests.Bootcamp.UpdateBootcampRequest;
-import com.example.BootCampProject.service.dtos.responses.Bootcamp.CreatedBootcampResponse;
-import com.example.BootCampProject.service.dtos.responses.Bootcamp.GetBootcampResponse;
-import com.example.BootCampProject.service.dtos.responses.Bootcamp.GetListBootcampResponse;
-import com.example.BootCampProject.service.dtos.responses.Bootcamp.UpdateBootcampResponse;
+import com.example.BootCampProject.service.dtos.responses.Bootcamp.*;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
@@ -16,6 +13,8 @@ import java.util.List;
 @Mapper
 public interface BootcampMapper {
     BootcampMapper INSTANCE = Mappers.getMapper(BootcampMapper.class);
+
+    DeletedBootcampResponse deletedBrandResponseFromBrand(Bootcamp bootcamp);
 
     @Mapping(source = "instructorId",target="instructor.id")
     Bootcamp bootcampFromCreateBootcampRequest(CreateBootcampRequest createBootcampRequest);

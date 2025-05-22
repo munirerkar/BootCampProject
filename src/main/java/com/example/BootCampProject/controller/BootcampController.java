@@ -4,10 +4,7 @@ import com.example.BootCampProject.entity.Bootcamp;
 import com.example.BootCampProject.service.abstracts.BootcampService;
 import com.example.BootCampProject.service.dtos.requests.Bootcamp.CreateBootcampRequest;
 import com.example.BootCampProject.service.dtos.requests.Bootcamp.UpdateBootcampRequest;
-import com.example.BootCampProject.service.dtos.responses.Bootcamp.CreatedBootcampResponse;
-import com.example.BootCampProject.service.dtos.responses.Bootcamp.GetBootcampResponse;
-import com.example.BootCampProject.service.dtos.responses.Bootcamp.GetListBootcampResponse;
-import com.example.BootCampProject.service.dtos.responses.Bootcamp.UpdateBootcampResponse;
+import com.example.BootCampProject.service.dtos.responses.Bootcamp.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -55,5 +52,16 @@ public class BootcampController {
     @ResponseStatus(HttpStatus.OK) //200
     public List<GetListBootcampResponse> getBootcampStates(Bootcamp.BootcampState bootcampState){
         return bootcampService.findByBootcampState(bootcampState);
+    }
+    @GetMapping("/getByName/{getByName}")
+    @ResponseStatus(HttpStatus.OK) //200
+    public List<GetListBootcampResponse> getByName(String name){
+        return bootcampService.getByName(name);
+    }
+
+    @DeleteMapping("softdelete/{id}")
+    @ResponseStatus(HttpStatus.OK) //200
+    public DeletedBootcampResponse softdelete(@PathVariable int id){
+        return bootcampService.softDelete(id);
     }
 }
