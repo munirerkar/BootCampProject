@@ -14,6 +14,7 @@ import com.example.BootCampProject.service.dtos.responses.Application.UpdateAppl
 import com.example.BootCampProject.service.dtos.responses.Bootcamp.CreatedBootcampResponse;
 import com.example.BootCampProject.service.mappers.ApplicationMapper;
 import com.example.BootCampProject.service.mappers.BootcampMapper;
+import com.example.BootCampProject.service.rules.ApplicationBusinessRules;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,14 +23,19 @@ import java.util.stream.Collectors;
 @Service
 public class ApplicationServiceImp implements ApplicationService {
     private final ApplicationRepository applicationRepository;
+    private final ApplicationBusinessRules rules;
 
-    public ApplicationServiceImp(ApplicationRepository applicationRepository) {
+    public ApplicationServiceImp(ApplicationRepository applicationRepository, ApplicationBusinessRules rules) {
         this.applicationRepository = applicationRepository;
+        this.rules = rules;
     }
 
 
     @Override
     public CreatedApplicationResponse add(CreateApplicationRequest request) {
+        rules.checkIfAlreadyApplied(request.getApplicantId(), request.getBootcampId());
+        rules.checkIfBootcampIsActive(request.getBootcampId());
+        rules.checkIfBlacklisted(request.getApplicantId());
         Application application = ApplicationMapper.INSTANCE.createApplicationRequestToApplication(request);
         Application createdApplication = applicationRepository.save(application);
         return ApplicationMapper.INSTANCE.createApplicationResponseFromApplication(createdApplication);
@@ -49,6 +55,12 @@ public class ApplicationServiceImp implements ApplicationService {
 
     @Override
     public UpdateApplicationResponse update(UpdateApplicationRequest request) {
+        Application existingApp = applicationRepository.findById(request.getId())
+                .orElseThrow(() -> new RuntimeException("Application not found with id: " + request.getId()));
+        Application.ApplicationState currentState = existingApp.getApplicationState();
+        Application.ApplicationState newState = request.getApplicationState();
+
+        rules.checkValidApplicationStatusTransition(currentState, newState);
         Application application = ApplicationMapper.INSTANCE.updateApplicationRequestToApplication(request);
         applicationRepository.findById(application.getId()).orElseThrow(() -> new RuntimeException("Application not found with id: " + application.getId()));
         Application updated = applicationRepository.save(application);

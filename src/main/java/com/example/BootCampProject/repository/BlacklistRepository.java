@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface BlacklistRepository extends JpaRepository<Blacklist,Integer> {
+public interface  BlacklistRepository extends JpaRepository<Blacklist,Integer> {
     List<Blacklist> findByApplicantId(int applicantId);
+    boolean existsByApplicant_Id(int applicantId);
 }

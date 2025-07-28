@@ -1,5 +1,6 @@
 package com.example.BootCampProject.service.concretes;
 
+import com.example.BootCampProject.common.exceptions.types.BusinessException;
 import com.example.BootCampProject.entity.Bootcamp;
 import com.example.BootCampProject.entity.Employee;
 import com.example.BootCampProject.repository.BootcampRepository;
@@ -9,6 +10,7 @@ import com.example.BootCampProject.service.dtos.requests.Bootcamp.UpdateBootcamp
 import com.example.BootCampProject.service.dtos.responses.Bootcamp.*;
 import com.example.BootCampProject.service.dtos.responses.Employee.GetListEmployeeResponse;
 import com.example.BootCampProject.service.mappers.BootcampMapper;
+import com.example.BootCampProject.service.rules.BootcampBusinessRules;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -18,14 +20,21 @@ import java.util.stream.Collectors;
 @Service
 public class BootcampServiceImp implements BootcampService {
     private final BootcampRepository bootcampRepository;
+    private final BootcampBusinessRules rules;
 
-    public BootcampServiceImp(BootcampRepository bootcampRepository) {
+    public BootcampServiceImp(BootcampRepository bootcampRepository, BootcampBusinessRules rules) {
         this.bootcampRepository = bootcampRepository;
+        this.rules = rules;
     }
 
     @Override
     public CreatedBootcampResponse add(CreateBootcampRequest request) {
+
+        rules.checkIfNameExists(request.getName());
+        rules.checkStartDateBeforeEndDate(request.getStartDate(),request.getEndDate());
+        rules.checkIfInstructorExists(request.getInstructorId());
         Bootcamp bootcamp = BootcampMapper.INSTANCE.bootcampFromCreateBootcampRequest(request);
+        rules.checkIfBootcampOpenForApplication(bootcamp.getId());
         Bootcamp createdBootcamp = bootcampRepository.save(bootcamp);
         CreatedBootcampResponse response = BootcampMapper.INSTANCE.createdBootcampResponseFromBootcamp(createdBootcamp);
         return response;
@@ -44,6 +53,7 @@ public class BootcampServiceImp implements BootcampService {
 
     @Override
     public UpdateBootcampResponse update(UpdateBootcampRequest request) {
+        rules.checkStartDateBeforeEndDate(request.getStartDate(),request.getEndDate());
         Bootcamp bootcamp = BootcampMapper.INSTANCE.bootcampFromUpdateBootcampRequest(request);
         bootcampRepository.findById(bootcamp.getId()).orElseThrow(() -> new RuntimeException("Bootcamp not found with id: " + bootcamp.getId()));
         Bootcamp updated = bootcampRepository.save(bootcamp);

@@ -14,6 +14,7 @@ import com.example.BootCampProject.service.dtos.responses.Blacklist.GetListBlack
 import com.example.BootCampProject.service.dtos.responses.Blacklist.UpdateBlacklistResponse;
 import com.example.BootCampProject.service.mappers.ApplicationMapper;
 import com.example.BootCampProject.service.mappers.BlacklistMapper;
+import com.example.BootCampProject.service.rules.BlacklistBusinessRules;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,13 +23,17 @@ import java.util.stream.Collectors;
 @Service
 public class BlacklistServiceImp implements BlacklistService {
     private final BlacklistRepository blacklistRepository;
+    private final BlacklistBusinessRules rules;
 
-    public BlacklistServiceImp(BlacklistRepository blacklistRepository) {
+    public BlacklistServiceImp(BlacklistRepository blacklistRepository, BlacklistBusinessRules rules) {
         this.blacklistRepository = blacklistRepository;
+        this.rules = rules;
     }
 
     @Override
     public CreatedBlacklistResponse add(CreateBlacklistRequest request) {
+        rules.checkIfApplicantAlreadyBlacklisted(request.getApplicantId());
+        rules.checkIfReasonIsNotBlank(request.getReason());
         Blacklist blacklist = BlacklistMapper.INSTANCE.createBlacklistRequestToBlacklist(request);
         Blacklist createdBlacklist = blacklistRepository.save(blacklist);
         return BlacklistMapper.INSTANCE.createBlacklistResponseFromBlacklist(createdBlacklist);

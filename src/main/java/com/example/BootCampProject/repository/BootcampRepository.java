@@ -11,4 +11,7 @@ import java.util.List;
 public interface BootcampRepository extends JpaRepository<Bootcamp,Integer> {
     List<Bootcamp> findByBootcampState(Bootcamp.BootcampState bootcampState);
     List<Bootcamp> getByName(String name);
+    Bootcamp getByNameIgnoreCase(String name);
+    Boolean existsByInstructorId(int instructorId);
+    boolean existsByIdAndDeletedAtIsNull(int bootcampId);
 }

@@ -10,4 +10,5 @@ import java.util.List;
 @Repository
 public interface ApplicationRepository extends JpaRepository<Application,Integer> {
     List<Application> findByApplicantId(int applicantId);
+    boolean existsByApplicantIdAndBootcampId(int applicantId, int bootcampId);
 }
