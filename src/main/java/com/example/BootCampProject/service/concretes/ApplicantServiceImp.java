@@ -1,9 +1,7 @@
 package com.example.BootCampProject.service.concretes;
 
 import com.example.BootCampProject.entity.Applicant;
-import com.example.BootCampProject.entity.Application;
 import com.example.BootCampProject.repository.ApplicantRepository;
-import com.example.BootCampProject.repository.ApplicationRepository;
 import com.example.BootCampProject.service.abstracts.ApplicantService;
 import com.example.BootCampProject.service.dtos.requests.Applicant.CreateApplicantRequest;
 import com.example.BootCampProject.service.dtos.requests.Applicant.UpdateApplicantRequest;
@@ -11,9 +9,7 @@ import com.example.BootCampProject.service.dtos.responses.Applicant.CreateApplic
 import com.example.BootCampProject.service.dtos.responses.Applicant.GetApplicantResponse;
 import com.example.BootCampProject.service.dtos.responses.Applicant.GetListApplicantResponse;
 import com.example.BootCampProject.service.dtos.responses.Applicant.UpdateApplicantResponse;
-import com.example.BootCampProject.service.dtos.responses.Application.GetListApplicationResponse;
 import com.example.BootCampProject.service.mappers.ApplicantMapper;
-import com.example.BootCampProject.service.mappers.ApplicationMapper;
 import com.example.BootCampProject.service.rules.ApplicantBusinessRules;
 import org.springframework.stereotype.Service;
 
