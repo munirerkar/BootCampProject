@@ -16,7 +16,7 @@ public class ApplicantBusinessRules {
         this.blacklistRepository = blacklistRepository;
     }
     public void checkIfIdentityExists(String nationalIdentity){
-        Applicant applicant = applicantRepository.getByIdentityIgnoreCase(nationalIdentity);
+        Applicant applicant = applicantRepository.getByUser_NationalIdentityIgnoreCase(nationalIdentity);
         if(applicant!=null)
             throw new BusinessException("Aynı TC Kimlik No ile birden fazla başvuru yapılamaz.");
 
